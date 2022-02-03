@@ -70,6 +70,7 @@ public class ServerMock implements Server
 {
 	private final Logger logger;
 
+	private final Thread mainThread = Thread.currentThread();
 	private final List<PlayerMock> players = new ArrayList<>();
 	private final List<PlayerMock> offlinePlayers = new ArrayList<>();
 	private final Set<EntityMock> entities = new HashSet<>();
@@ -943,8 +944,7 @@ public class ServerMock implements Server
 	
 	public boolean isPrimaryThread()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return mainThread.equals(Thread.currentThread());
 	}
 
 	
