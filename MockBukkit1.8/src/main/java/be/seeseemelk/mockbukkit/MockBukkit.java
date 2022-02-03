@@ -33,28 +33,41 @@ public class MockBukkit
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	/**
-	 * Start mocking the <code>Bukkit</code> singleton. Also returns the
-	 * {@link ServerMock} that was created for ease of use.
-	 * 
+	 * Start mocking the <code>Bukkit</code> singleton. Also returns the {@link ServerMock} that was created for ease of
+	 * use.
+	 *
 	 * @return The created {@link ServerMock}.
 	 */
 	public static ServerMock mock()
+	{
+		return mock(new ServerMock());
+	}
+
+	/**
+	 * Start mocking the <code>Bukkit</code> singleton. You can pass your own implementation of the {@link ServerMock}
+	 * instance. The instance you passed is returned.
+	 *
+	 * @param <T>                      The mock implementation to use.
+	 * @param serverMockImplementation your custom {@link ServerMock} implementation.
+	 * @return The provided {@link ServerMock}.
+	 */
+	public static <T extends ServerMock> T mock(T serverMockImplementation)
 	{
 		if (mock != null)
 		{
 			throw new IllegalStateException("Already mocking");
 		}
 		
-		mock = new ServerMock();
+		mock = serverMockImplementation;
 		
 		Level defaultLevel = mock.getLogger().getLevel();
 		mock.getLogger().setLevel(Level.WARNING);
 		Bukkit.setServer(mock);
 		mock.getLogger().setLevel(defaultLevel);
 		
-		return mock;
+		return serverMockImplementation;
 	}
 	
 	/**
