@@ -1,0 +1,19 @@
+apply plugin: "maven-publish"
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+
+    repositories {
+        maven {
+            credentials {
+                username findProperty("imanityLibrariesUsername")
+                password findProperty("imanityLibrariesPassword")
+            }
+            url "https://maven.imanity.dev/repository/imanity-libraries/"
+        }
+    }
+}
