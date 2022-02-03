@@ -119,4 +119,4 @@ buildNumber.properties
 run/
 
 .gradle
-/build/
+build/

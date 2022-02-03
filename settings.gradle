@@ -1,3 +1,4 @@
 rootProject.name = 'MockBukkitSeries'
 
 include "MockBukkit1.8"
+include "MockBukkit1.16"
