@@ -13,6 +13,9 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ItemFactoryMock implements ItemFactory
 {
+
+	private final Color defaultLeatherColor = Color.fromRGB(10511680);
+
 	private Class<? extends ItemMeta> getItemMetaClass(Material material)
 	{
 		switch (material)
@@ -132,8 +135,7 @@ public class ItemFactoryMock implements ItemFactory
 	@Override
 	public Color getDefaultLeatherColor()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return defaultLeatherColor;
 	}
 	
 }
