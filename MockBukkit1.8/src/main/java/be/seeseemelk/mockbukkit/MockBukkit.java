@@ -242,6 +242,13 @@ public class MockBukkit
 			throw new IllegalStateException("Not mocking");
 		}
 	}
+
+	/**
+	 * Replicate modern version of method
+	 */
+	public static void unmock() {
+		unload();
+	}
 	
 	/**
 	 * Unload all loaded plugins.

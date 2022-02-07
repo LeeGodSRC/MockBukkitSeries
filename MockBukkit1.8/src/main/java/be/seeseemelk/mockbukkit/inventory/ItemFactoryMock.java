@@ -1,9 +1,7 @@
 package be.seeseemelk.mockbukkit.inventory;
 
 import be.seeseemelk.mockbukkit.UnimplementedOperationException;
-import be.seeseemelk.mockbukkit.inventory.meta.BookMetaMock;
-import be.seeseemelk.mockbukkit.inventory.meta.ItemMetaMock;
-import be.seeseemelk.mockbukkit.inventory.meta.SkullMetaMock;
+import be.seeseemelk.mockbukkit.inventory.meta.*;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFactory;
@@ -28,7 +26,7 @@ public class ItemFactoryMock implements ItemFactory
 				return BookMetaMock.class;
 			case ENCHANTED_BOOK:
 				// TODO Auto-generated method stub
-				throw new UnimplementedOperationException();
+				return EnchantedBookMetaMock.class;
 			case FIREWORK:
 				// TODO Auto-generated method stub
 				throw new UnimplementedOperationException();
@@ -36,8 +34,7 @@ public class ItemFactoryMock implements ItemFactory
 			case LEATHER_CHESTPLATE:
 			case LEATHER_HELMET:
 			case LEATHER_LEGGINGS:
-				// TODO Auto-generated method stub
-				throw new UnimplementedOperationException();
+				return LeatherArmorMetaMock.class;
 			case MAP:
 				// TODO Auto-generated method stub
 				throw new UnimplementedOperationException();

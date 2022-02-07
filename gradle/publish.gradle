@@ -1,7 +1,7 @@
 apply plugin: "maven-publish"
 
 group 'dev.imanity.mockbukkit'
-version '1.0.2'
+version '1.0.7'
 
 publishing {
     publications {

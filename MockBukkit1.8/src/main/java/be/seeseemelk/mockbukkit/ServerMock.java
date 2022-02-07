@@ -409,14 +409,7 @@ public class ServerMock implements Server
 	
 	public PluginCommand getPluginCommand(String name)
 	{
-		for (PluginCommand command : getPluginManager().getCommands())
-		{
-			if (isLabelOfCommand(command, name))
-			{
-				return command;
-			}
-		}
-		return null;
+		return (PluginCommand) this.pluginManager.getCommandMap().getCommand(name);
 	}
 
 	

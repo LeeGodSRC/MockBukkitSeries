@@ -25,27 +25,19 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import be.seeseemelk.mockbukkit.command.MockCommandMap;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.Validate;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.PluginCommandUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
+import org.bukkit.event.*;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.plugin.EventExecutor;
-import org.bukkit.plugin.InvalidDescriptionException;
-import org.bukkit.plugin.InvalidPluginException;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.UnknownDependencyException;
+import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.bukkit.plugin.java.JavaPluginUtils;
@@ -58,7 +50,7 @@ public class PluginManagerMock implements PluginManager
 	private final ServerMock server;
 	private final List<Plugin> plugins = new ArrayList<>();
 	private final JavaPluginLoader loader;
-	private final List<PluginCommand> commands = new ArrayList<>();
+	private final MockCommandMap commandMap;
 	private final Map<Plugin, List<ListenerEntry>> eventListeners = new HashMap<>();
 	private final List<Event> events = new ArrayList<>();
 	private final List<File> temporaryFiles = new LinkedList<>();
@@ -71,7 +63,12 @@ public class PluginManagerMock implements PluginManager
 	public PluginManagerMock(ServerMock server)
 	{
 		this.server = server;
+		this.commandMap = new MockCommandMap(server);
 		loader = new JavaPluginLoader(this.server);
+	}
+
+	public MockCommandMap getCommandMap() {
+		return this.commandMap;
 	}
 	
 	/**
@@ -173,16 +170,6 @@ public class PluginManagerMock implements PluginManager
 	public Plugin[] getPlugins()
 	{
 		return plugins.toArray(new Plugin[plugins.size()]);
-	}
-	
-	/**
-	 * Get a collection of all available commands.
-	 * 
-	 * @return A collection of all available commands.
-	 */
-	public Collection<PluginCommand> getCommands()
-	{
-		return Collections.unmodifiableList(commands);
 	}
 	
 	/**
@@ -490,7 +477,7 @@ public class PluginManagerMock implements PluginManager
 				{
 					addSection(command, section.getKey(), section.getValue());
 				}
-				this.commands.add(command);
+				this.commandMap.register(plugin.getName(), command);
 			}
 		}
 	}
@@ -544,21 +531,63 @@ public class PluginManagerMock implements PluginManager
 		disablePlugins();
 		plugins.clear();
 	}
-	
+
 	@Override
 	public void registerEvent(Class<? extends Event> event, Listener listener, EventPriority priority,
-			EventExecutor executor, Plugin plugin)
+							  EventExecutor executor, Plugin plugin)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		registerEvent(event, listener, priority, executor, plugin, false);
 	}
-	
+
 	@Override
 	public void registerEvent(Class<? extends Event> event, Listener listener, EventPriority priority,
-			EventExecutor executor, Plugin plugin, boolean ignoreCancelled)
+							  EventExecutor executor, Plugin plugin, boolean ignoreCancelled)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		Validate.notNull(listener, "Listener cannot be null");
+		Validate.notNull(priority, "Priority cannot be null");
+		Validate.notNull(executor, "Executor cannot be null");
+		Validate.notNull(plugin, "Plugin cannot be null");
+		if (!plugin.isEnabled())
+		{
+			throw new IllegalPluginAccessException("Plugin attempted to register " + event + " while not enabled");
+		}
+		getEventListeners(event).register(new RegisteredListener(listener, executor, priority, plugin, ignoreCancelled));
+	}
+
+	private HandlerList getEventListeners(Class<? extends Event> type)
+	{
+		try
+		{
+			Method method = getRegistrationClass(type).getDeclaredMethod("getHandlerList");
+			method.setAccessible(true);
+			return (HandlerList) method.invoke(null);
+		}
+		catch (Exception e)
+		{
+			throw new IllegalPluginAccessException(e.toString());
+		}
+	}
+
+	private Class<? extends Event> getRegistrationClass(Class<? extends Event> clazz)
+	{
+		try
+		{
+			clazz.getDeclaredMethod("getHandlerList");
+			return clazz;
+		}
+		catch (NoSuchMethodException e)
+		{
+			if (clazz.getSuperclass() != null
+					&& !clazz.getSuperclass().equals(Event.class)
+					&& Event.class.isAssignableFrom(clazz.getSuperclass()))
+			{
+				return getRegistrationClass(clazz.getSuperclass().asSubclass(Event.class));
+			}
+			else
+			{
+				throw new IllegalPluginAccessException("Unable to find handler list for event " + clazz.getName() + ". Static getHandlerList method required!");
+			}
+		}
 	}
 	
 	@Override
