@@ -73,6 +73,8 @@ public class PlayerMock extends EntityMock implements Player
 	private double health = 20.0;
 	private boolean whitelisted = true;
 	private InventoryView inventoryView;
+
+	private final Set<UUID> hiddenPlayers = new HashSet<>();
 	
 	public PlayerMock(String name)
 	{
@@ -1274,22 +1276,19 @@ public class PlayerMock extends EntityMock implements Player
 	@Override
 	public void hidePlayer(Player player)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		this.hiddenPlayers.add(player.getUniqueId());
 	}
 	
 	@Override
 	public void showPlayer(Player player)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		this.hiddenPlayers.remove(player.getUniqueId());
 	}
 	
 	@Override
 	public boolean canSee(Player player)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return !this.hiddenPlayers.contains(player.getUniqueId());
 	}
 	
 	@Override
