@@ -231,7 +231,7 @@ public class ServerMock implements Server
 	 */
 	public CommandResult executeConsole(String command, String... args)
 	{
-		return executeConsole(getPluginCommand(command), args);
+		return executeConsole(getCommand(command), args);
 	}
 
 	/**
@@ -262,7 +262,7 @@ public class ServerMock implements Server
 	 */
 	public CommandResult executePlayer(String command, String... args)
 	{
-		return executePlayer(getPluginCommand(command), args);
+		return executePlayer(getCommand(command), args);
 	}
 
 	/**
@@ -295,7 +295,7 @@ public class ServerMock implements Server
 	 */
 	public CommandResult execute(String command, CommandSender sender, String... args)
 	{
-		return execute(getPluginCommand(command), sender, args);
+		return execute(getCommand(command), sender, args);
 	}
 
 	
@@ -406,6 +406,9 @@ public class ServerMock implements Server
 		return false;
 	}
 
+	public Command getCommand(String name) {
+		return this.pluginManager.getCommandMap().getCommand(name);
+	}
 	
 	public PluginCommand getPluginCommand(String name)
 	{
@@ -598,7 +601,7 @@ public class ServerMock implements Server
 		String[] commands = commandLine.split(" ");
 		String commandLabel = commands[0];
 		String[] args = Arrays.copyOfRange(commands, 1, commands.length);
-		Command command = getPluginCommand(commandLabel);
+		Command command = getCommand(commandLabel);
 		if (command != null)
 			return command.execute(sender, commandLabel, args);
 		else
