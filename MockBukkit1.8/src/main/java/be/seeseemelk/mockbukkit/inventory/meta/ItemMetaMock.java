@@ -1,6 +1,7 @@
 package be.seeseemelk.mockbukkit.inventory.meta;
 
 import be.seeseemelk.mockbukkit.UnimplementedOperationException;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -155,7 +156,7 @@ public class ItemMetaMock implements ItemMeta
 	@Override
 	public List<String> getLore()
 	{
-		return new ArrayList<>(lore);
+		return lore == null ? new ArrayList<>() : new ArrayList<>(lore);
 	}
 	
 	@Override

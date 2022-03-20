@@ -50,6 +50,7 @@ import java.util.stream.Collectors;
 public class WorldMock implements World
 {
 	private Map<Coordinate, BlockMock> blocks = new HashMap<>();
+	private final Map<String, Object> gameRules = new HashMap<>();
 	private Material defaultBlock;
 	private int height;
 	private int grassHeight;
