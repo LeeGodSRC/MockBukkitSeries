@@ -2,18 +2,7 @@ package be.seeseemelk.mockbukkit;
 
 import be.seeseemelk.mockbukkit.block.BlockMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
-import org.bukkit.BlockChangeDelegate;
-import org.bukkit.Chunk;
-import org.bukkit.ChunkSnapshot;
-import org.bukkit.Difficulty;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.TreeType;
-import org.bukkit.World;
-import org.bukkit.WorldBorder;
-import org.bukkit.WorldType;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
@@ -50,13 +39,18 @@ import java.util.stream.Collectors;
 public class WorldMock implements World
 {
 	private Map<Coordinate, BlockMock> blocks = new HashMap<>();
-	private final Map<String, Object> gameRules = new HashMap<>();
+	private final Map<String, String> gameRules = new HashMap<>();
 	private Material defaultBlock;
 	private int height;
 	private int grassHeight;
 	private String name = "World";
 	private UUID uuid = UUID.randomUUID();
 	private Location spawnLocation;
+
+	private long fullTime = 0;
+	private int weatherDuration = 0;
+	private int thunderDuration = 0;
+	private boolean storming = false;
 	
 	/**
 	 * Creates a new mock world.
@@ -72,6 +66,7 @@ public class WorldMock implements World
 		this.defaultBlock = defaultBlock;
 		this.height = height;
 		this.grassHeight = grassHeight;
+		this.initializeGameRules();
 	}
 	
 	/**
@@ -94,6 +89,28 @@ public class WorldMock implements World
 	public WorldMock()
 	{
 		this(Material.GRASS, 4);
+	}
+
+	private void initializeGameRules() {
+		this.setGameRuleValueInternal("doFireTick", "true");
+		this.setGameRuleValueInternal("mobGriefing", "true");
+		this.setGameRuleValueInternal("keepInventory", "false");
+		this.setGameRuleValueInternal("doMobSpawning", "true");
+		this.setGameRuleValueInternal("doMobLoot", "true");
+		this.setGameRuleValueInternal("doTileDrops", "true");
+		this.setGameRuleValueInternal("doEntityDrops", "true");
+		this.setGameRuleValueInternal("commandBlockOutput", "true");
+		this.setGameRuleValueInternal("naturalRegeneration", "true");
+		this.setGameRuleValueInternal("doDaylightCycle", "true");
+		this.setGameRuleValueInternal("logAdminCommands", "true");
+		this.setGameRuleValueInternal("showDeathMessages", "true");
+		this.setGameRuleValueInternal("randomTickSpeed", "3");
+		this.setGameRuleValueInternal("sendCommandFeedback", "true");
+		this.setGameRuleValueInternal("reducedDebugInfo", "false");
+	}
+
+	private void setGameRuleValueInternal(String key, String value) {
+		this.gameRules.put(key, value);
 	}
 	
 	/**
@@ -506,7 +523,7 @@ public class WorldMock implements World
 	public List<Player> getPlayers()
 	{
 		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return Bukkit.getOnlinePlayers().stream().filter(p -> p.getWorld() == this).collect(Collectors.toList());
 	}
 	
 	@Override
@@ -515,89 +532,78 @@ public class WorldMock implements World
 		// TODO Auto-generated method stub
 		throw new UnimplementedOperationException();
 	}
-	
+
 	@Override
 	public long getTime()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return this.getFullTime() % 24000L;
 	}
-	
+
 	@Override
 	public void setTime(long time)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		long base = this.getFullTime() - this.getFullTime() % 24000L;
+		this.setFullTime(base + time % 24000L);
 	}
-	
+
 	@Override
 	public long getFullTime()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return this.fullTime;
 	}
-	
+
 	@Override
 	public void setFullTime(long time)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		this.fullTime = time;
 	}
-	
+
 	@Override
 	public boolean hasStorm()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return storming;
 	}
-	
+
 	@Override
 	public void setStorm(boolean hasStorm)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		storming = hasStorm;
 	}
-	
+
 	@Override
 	public int getWeatherDuration()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return weatherDuration;
 	}
-	
+
 	@Override
 	public void setWeatherDuration(int duration)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		weatherDuration = duration;
 	}
-	
+
 	@Override
 	public boolean isThundering()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return thunderDuration > 0;
 	}
-	
+
 	@Override
 	public void setThundering(boolean thundering)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		thunderDuration = thundering ? 600 : 0;
 	}
-	
+
 	@Override
 	public int getThunderDuration()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return thunderDuration;
 	}
-	
+
 	@Override
 	public void setThunderDuration(int duration)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		thunderDuration = duration;
 	}
 	
 	@Override
@@ -964,29 +970,29 @@ public class WorldMock implements World
 	@Override
 	public String[] getGameRules()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return this.gameRules.keySet().toArray(new String[0]);
 	}
 	
 	@Override
 	public String getGameRuleValue(String rule)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return this.gameRules.get(rule);
 	}
 	
 	@Override
 	public boolean setGameRuleValue(String rule, String value)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		if (rule == null || value == null) return false;
+		if (!isGameRule(rule)) return false;
+
+		this.gameRules.put(rule, value);
+		return true;
 	}
 	
 	@Override
 	public boolean isGameRule(String rule)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return this.gameRules.containsKey(rule);
 	}
 	
 	@Override
