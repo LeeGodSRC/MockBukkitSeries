@@ -32,7 +32,7 @@ public class ItemFactoryMock implements ItemFactory
 				return EnchantedBookMetaMock.class;
 			case FIREWORK:
 				// TODO Auto-generated method stub
-				throw new UnimplementedOperationException();
+				return FireworkMetaMock.class;
 			case LEATHER_BOOTS:
 			case LEATHER_CHESTPLATE:
 			case LEATHER_HELMET:
@@ -43,7 +43,7 @@ public class ItemFactoryMock implements ItemFactory
 				throw new UnimplementedOperationException();
 			case POTION:
 				// TODO Auto-generated method stub
-				throw new UnimplementedOperationException();
+				return PotionMetaMock.class;
 			case SKULL:
 			case SKULL_ITEM:
 				// TODO Auto-generated method stub

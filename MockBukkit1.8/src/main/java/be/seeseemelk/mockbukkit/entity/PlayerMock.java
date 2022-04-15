@@ -74,6 +74,9 @@ public class PlayerMock extends EntityMock implements Player
 	private boolean whitelisted = true;
 	private InventoryView inventoryView;
 
+	private Entity spectatorTarget;
+	private boolean inventoryUpdated;
+
 	private final Set<UUID> hiddenPlayers = new HashSet<>();
 	
 	public PlayerMock(String name)
@@ -928,12 +931,19 @@ public class PlayerMock extends EntityMock implements Player
 		// TODO Auto-generated method stub
 		throw new UnimplementedOperationException();
 	}
-	
+
+	public boolean isInventoryUpdated() {
+		if (this.inventoryUpdated) {
+			this.inventoryUpdated = false;
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public void updateInventory()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		this.inventoryUpdated = true;
 	}
 	
 	@Override
@@ -1392,15 +1402,13 @@ public class PlayerMock extends EntityMock implements Player
 	@Override
 	public Entity getSpectatorTarget()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return this.spectatorTarget;
 	}
 	
 	@Override
 	public void setSpectatorTarget(Entity entity)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		this.spectatorTarget = entity;
 	}
 	
 	@Override

@@ -51,7 +51,10 @@ public class WorldMock implements World
 	private int weatherDuration = 0;
 	private int thunderDuration = 0;
 	private boolean storming = false;
-	
+	private boolean autoSave = true;
+
+	private Difficulty difficulty = Difficulty.NORMAL;
+
 	/**
 	 * Creates a new mock world.
 	 * 
@@ -102,6 +105,7 @@ public class WorldMock implements World
 		this.setGameRuleValueInternal("commandBlockOutput", "true");
 		this.setGameRuleValueInternal("naturalRegeneration", "true");
 		this.setGameRuleValueInternal("doDaylightCycle", "true");
+		this.setGameRuleValueInternal("doWeatherCycle", "true");
 		this.setGameRuleValueInternal("logAdminCommands", "true");
 		this.setGameRuleValueInternal("showDeathMessages", "true");
 		this.setGameRuleValueInternal("randomTickSpeed", "3");
@@ -830,29 +834,25 @@ public class WorldMock implements World
 	@Override
 	public boolean isAutoSave()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return this.autoSave;
 	}
 	
 	@Override
 	public void setAutoSave(boolean value)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		this.autoSave = value;
 	}
 	
 	@Override
 	public void setDifficulty(Difficulty difficulty)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		this.difficulty = difficulty;
 	}
 	
 	@Override
 	public Difficulty getDifficulty()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return this.difficulty;
 	}
 	
 	@Override
