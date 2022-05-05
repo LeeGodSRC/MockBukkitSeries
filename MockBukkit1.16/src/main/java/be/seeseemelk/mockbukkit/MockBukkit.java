@@ -319,6 +319,7 @@ public class MockBukkit
 
 			mock.getPluginManager().unload();
 			setServerInstanceToNull();
+			mock = null;
 		}
 	}
 
