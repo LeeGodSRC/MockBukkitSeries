@@ -3,6 +3,7 @@ package be.seeseemelk.mockbukkit;
 import be.seeseemelk.mockbukkit.command.CommandResult;
 import be.seeseemelk.mockbukkit.command.ConsoleCommandSenderMock;
 import be.seeseemelk.mockbukkit.command.MessageTarget;
+import be.seeseemelk.mockbukkit.enchantments.EnchantmentsMock;
 import be.seeseemelk.mockbukkit.entity.EntityMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMockFactory;
@@ -88,6 +89,8 @@ public class ServerMock implements Server
 	public ServerMock()
 	{		
 		logger = Logger.getLogger("ServerMock");
+
+		EnchantmentsMock.registerDefaultEnchantments();
 		try
 		{
 			InputStream stream = ClassLoader.getSystemResourceAsStream("logger.properties");

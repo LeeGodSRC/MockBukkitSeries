@@ -110,26 +110,25 @@ public class ItemFactoryMock implements ItemFactory
 		Class<? extends ItemMeta> target = getItemMetaClass(material);
 		try
 		{
-			Constructor<? extends ItemMeta> constructor = target.getDeclaredConstructor(meta.getClass());
-			return constructor.newInstance(meta);
-		}
-		catch (SecurityException | InstantiationException | IllegalAccessException | InvocationTargetException e)
-		{
-			throw new Error(e);
-		}
-		catch (NoSuchMethodException e)
-		{
-			try
+			for (Constructor<?> constructor : target.getDeclaredConstructors())
 			{
-				Constructor<? extends ItemMeta> constructor = target.getDeclaredConstructor(ItemMeta.class);
-				return constructor.newInstance(meta);
+				// This will make sure we find the most suitable constructor for this
+				if (constructor.getParameterCount() == 1
+						&& constructor.getParameterTypes()[0].isAssignableFrom(meta.getClass()))
+				{
+					return (ItemMeta) constructor.newInstance(meta);
+				}
 			}
-			catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
-					| InvocationTargetException e1)
-			{
-				throw new Error(e);
-			}
+
+			throw new NoSuchMethodException(
+					"Cannot find an ItemMeta constructor for the class \"" + meta.getClass().getName() + "\"");
 		}
+		catch (SecurityException | InstantiationException | IllegalAccessException | InvocationTargetException
+			   | NoSuchMethodException e)
+		{
+			throw new RuntimeException(e);
+		}
+
 	}
 	
 	@Override
