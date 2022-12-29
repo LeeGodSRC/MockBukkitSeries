@@ -5,6 +5,7 @@ import be.seeseemelk.mockbukkit.UnimplementedOperationException;
 import be.seeseemelk.mockbukkit.inventory.PlayerInventoryMock;
 import be.seeseemelk.mockbukkit.inventory.PlayerInventoryViewMock;
 import be.seeseemelk.mockbukkit.inventory.SimpleInventoryViewMock;
+import be.seeseemelk.mockbukkit.potion.ActivePotionEffect;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import org.bukkit.Achievement;
@@ -62,7 +63,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
-public class PlayerMock extends EntityMock implements Player
+public class PlayerMock extends LivingEntityMock implements Player
 {
 	private static final double MAX_HEALTH = 20.0;
 	private boolean online;
@@ -74,11 +75,15 @@ public class PlayerMock extends EntityMock implements Player
 	private boolean whitelisted = true;
 	private InventoryView inventoryView;
 
+	private boolean flying = false;
+	private boolean allowFlight = false;
+	private float walkSpeed = 0.2f;
+	private float flySpeed = 0.1f;
 	private Entity spectatorTarget;
 	private boolean inventoryUpdated;
 
 	private final Set<UUID> hiddenPlayers = new HashSet<>();
-	
+
 	public PlayerMock(String name)
 	{
 		this(name, UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8)));
@@ -523,62 +528,6 @@ public class PlayerMock extends EntityMock implements Player
 	
 	@Override
 	public void setNoDamageTicks(int ticks)
-	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
-	}
-	
-	@Override
-	public Player getKiller()
-	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
-	}
-	
-	@Override
-	public boolean addPotionEffect(PotionEffect effect)
-	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
-	}
-	
-	@Override
-	public boolean addPotionEffect(PotionEffect effect, boolean force)
-	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
-	}
-	
-	@Override
-	public boolean addPotionEffects(Collection<PotionEffect> effects)
-	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
-	}
-	
-	@Override
-	public boolean hasPotionEffect(PotionEffectType type)
-	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
-	}
-	
-	@Override
-	public void removePotionEffect(PotionEffectType type)
-	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
-	}
-	
-	@Override
-	public Collection<PotionEffect> getActivePotionEffects()
-	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
-	}
-	
-	@Override
-	public boolean hasLineOfSight(Entity other)
 	{
 		// TODO Auto-generated method stub
 		throw new UnimplementedOperationException();
@@ -1272,15 +1221,13 @@ public class PlayerMock extends EntityMock implements Player
 	@Override
 	public boolean getAllowFlight()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return this.allowFlight;
 	}
 	
 	@Override
 	public void setAllowFlight(boolean flight)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		this.allowFlight = flight;
 	}
 	
 	@Override
@@ -1304,43 +1251,37 @@ public class PlayerMock extends EntityMock implements Player
 	@Override
 	public boolean isFlying()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return this.flying;
 	}
 	
 	@Override
 	public void setFlying(boolean value)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		this.flying = value;
 	}
 	
 	@Override
 	public void setFlySpeed(float value) throws IllegalArgumentException
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		this.flySpeed = value;
 	}
 	
 	@Override
 	public void setWalkSpeed(float value) throws IllegalArgumentException
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		this.walkSpeed = value;
 	}
 	
 	@Override
 	public float getFlySpeed()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return this.flySpeed;
 	}
 	
 	@Override
 	public float getWalkSpeed()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return this.walkSpeed;
 	}
 	
 	@Override

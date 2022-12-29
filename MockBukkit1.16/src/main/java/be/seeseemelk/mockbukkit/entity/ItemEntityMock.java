@@ -21,6 +21,7 @@ public class ItemEntityMock extends EntityMock implements Item
 {
 
 	private ItemStack item;
+	private UUID owner;
 
 	// The default pickup delay
 	private int delay = 10;
@@ -66,15 +67,13 @@ public class ItemEntityMock extends EntityMock implements Item
 	@Override
 	public void setOwner(@Nullable UUID owner)
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		this.owner = owner;
 	}
 
 	@Override
 	public @Nullable UUID getOwner()
 	{
-		// TODO Auto-generated method stub
-		throw new UnimplementedOperationException();
+		return owner;
 	}
 
 	@Override

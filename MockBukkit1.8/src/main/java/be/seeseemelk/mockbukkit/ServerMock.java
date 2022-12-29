@@ -12,6 +12,7 @@ import be.seeseemelk.mockbukkit.inventory.InventoryMock;
 import be.seeseemelk.mockbukkit.inventory.ItemFactoryMock;
 import be.seeseemelk.mockbukkit.inventory.PlayerInventoryMock;
 import be.seeseemelk.mockbukkit.plugin.PluginManagerMock;
+import be.seeseemelk.mockbukkit.potion.PotionsMock;
 import be.seeseemelk.mockbukkit.scheduler.BukkitSchedulerMock;
 import be.seeseemelk.mockbukkit.scoreboard.ScoreboardManagerMock;
 import com.avaje.ebean.config.ServerConfig;
@@ -90,6 +91,7 @@ public class ServerMock implements Server
 	{		
 		logger = Logger.getLogger("ServerMock");
 
+		PotionsMock.registerDefaultPotionEffectTypes();
 		EnchantmentsMock.registerDefaultEnchantments();
 		try
 		{
