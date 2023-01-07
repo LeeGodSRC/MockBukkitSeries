@@ -70,6 +70,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("deprecation")
 public class ServerMock implements Server
 {
+	private static final String BUKKIT_VERSION = "1.8.8";
 	private final Logger logger;
 
 	private final Thread mainThread = Thread.currentThread();
@@ -312,13 +313,13 @@ public class ServerMock implements Server
 	
 	public String getVersion()
 	{
-		return "0.1.0";
+		return String.format("MockBukkit (MC: %s)", BUKKIT_VERSION);
 	}
 
 	
 	public String getBukkitVersion()
 	{
-		return "1.12.1";
+		return BUKKIT_VERSION;
 	}
 
 	
