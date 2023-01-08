@@ -156,6 +156,11 @@ public class BukkitSchedulerMock implements BukkitScheduler
 	 */
 	public void waitAsyncTasksFinished()
 	{
+		// Cancel repeating tasks so they don't run forever.
+		scheduledTasks.tasks.entrySet().stream()
+				.filter(entry -> entry.getValue() instanceof RepeatingTask)
+				.forEach(entry -> scheduledTasks.cancelTask(entry.getKey()));
+
 		// Make sure all tasks get to execute. (except for repeating asynchronous tasks, they only will fire once)
 		while (scheduledTasks.getScheduledTaskCount() > 0)
 		{
